@@ -50,7 +50,7 @@ fn print(r: &Report, name: &str, top: usize) {
     heading("Protocols", r.protocols.len(), r.protocols.len());
     for p in &r.protocols {
         println!(
-            "  {:<12} {:<11} {:>8} packets {:>9}",
+            "  {:<12} {:<11} {:>8} pkts {:>9}",
             p.layer,
             p.name,
             p.packets,
@@ -80,16 +80,17 @@ fn print(r: &Report, name: &str, top: usize) {
         let rcode = d.rcode.unwrap_or("no reply");
         let latency = d
             .latency_us
-            .map(|us| format!("  {:.1} ms", us as f64 / 1000.0));
-        println!(
-            "  {:>9}  {:<26} {:<5} {} {rcode}  {}{}",
+            .map(|us| format!("{:.1} ms", us as f64 / 1000.0));
+        let line = format!(
+            "  {:>9}  {:<26} {:<5} {rcode:<9} {:>9}  {}  {}",
             duration(d.time_us.saturating_sub(start)),
             d.client,
             d.kind,
+            latency.unwrap_or_default(),
             d.name,
             d.answers.join(", "),
-            latency.unwrap_or_default(),
         );
+        println!("{}", line.trim_end());
     }
 }
 
