@@ -75,7 +75,7 @@ def http_flow(t):
     ]
 
 
-def dns_exchange(t, src, dst, sport, query_id, name, qtype, answers=(), rcode=0):
+def dns_exchange(t, src, dst, sport, query_id, name, qtype, answers=None, rcode=0):
     ip = IPv6 if ":" in src else IP
     question = DNSQR(qname=name, qtype=qtype)
     query = eth(ip(src=src, dst=dst) / UDP(sport=sport, dport=53) / DNS(id=query_id, rd=1, qd=question))
@@ -90,13 +90,15 @@ def mixed():
     packets = [at(eth(ARP(psrc="10.0.0.2", pdst="10.0.0.1")), 0)]
     packets += dns_exchange(
         Decimal("0.100"), "10.0.0.2", "10.0.0.1", 53000, 0x1234, "www.example.com", "A",
-        DNSRR(rrname="www.example.com", type="CNAME", rdata="example.com", ttl=300)
-        / DNSRR(rrname="example.com", type="A", rdata="93.184.216.34", ttl=300),
+        [
+            DNSRR(rrname="www.example.com", type="CNAME", rdata="example.com", ttl=300),
+            DNSRR(rrname="example.com", type="A", rdata="93.184.216.34", ttl=300),
+        ],
     )
     packets += http_flow(Decimal("0.200"))
     packets += dns_exchange(
         Decimal("1.000"), "fd00::2", "fd00::1", 53001, 0x5678, "example.com", "AAAA",
-        DNSRR(rrname="example.com", type="AAAA", rdata="2606:2800:220:1:248:1893:25c8:1946", ttl=60),
+        [DNSRR(rrname="example.com", type="AAAA", rdata="2606:2800:220:1:248:1893:25c8:1946", ttl=60)],
     )
     packets += dns_exchange(
         Decimal("1.100"), "10.0.0.2", "10.0.0.1", 53002, 0x0bad, "nope.invalid", "A", rcode=3,
