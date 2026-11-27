@@ -34,11 +34,11 @@ The page is static: `index.html`, a little JavaScript and the 200 kB wasm module
 
 ```sh
 make check    # Rust tests, then the wasm module through the page's loader in node
-make lint     # rustfmt, clippy, and Biome for the JavaScript and CSS
+make lint     # rustfmt and clippy, Biome for the page, ruff for the fixture script
 make fixtures # rewrite the captures in tests/fixtures (needs uv; uses scapy)
 ```
 
-The captures in `tests/fixtures` are made by `make.py`, so each test knows exactly what is in them: a DNS exchange over IPv4 and IPv6, an NXDOMAIN, an HTTP flow with a resent segment, ICMP, ARP and a VLAN-tagged packet, written as pcap in both byte orders, nanosecond pcap and pcapng. All four must give the same report. `tls.pcap` holds a real OpenSSL ClientHello split in two, sent second half first, with sequence numbers that wrap mid-hello.
+The captures in `tests/fixtures` are made by `make.py`, so each test knows exactly what is in them: a DNS exchange over IPv4 and IPv6, an NXDOMAIN, an HTTP flow with a resent segment, ICMP, ARP and a VLAN-tagged packet, written as pcap in both byte orders, nanosecond pcap and pcapng. All four must give the same report. `tls.pcap` holds a real OpenSSL ClientHello split in two, sent second half first, with sequence numbers that wrap mid-hello. Its random parts change each time the script runs; the tests do not look at them.
 
 ## Layout
 

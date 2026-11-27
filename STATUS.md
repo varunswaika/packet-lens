@@ -2,7 +2,7 @@
 
 **27 November 2026.** Works on the test captures, from the CLI and in the web page.
 
-- 42 Rust tests and 3 node tests pass. rustfmt, clippy and Biome are clean.
+- 43 Rust tests and 3 node tests pass. rustfmt, clippy, Biome and ruff are clean.
 - The page was checked by hand in Chromium, light and dark, with the sample capture.
 - Not yet tried on large real-world captures. CI is written but has not run.
 
