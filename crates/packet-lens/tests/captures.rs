@@ -32,7 +32,7 @@ fn protocol(r: &Report, name: &str) -> u64 {
         .sum()
 }
 
-fn flow<'a>(r: &'a Report, port: u16) -> &'a FlowSummary {
+fn flow(r: &Report, port: u16) -> &FlowSummary {
     r.flows.iter().find(|f| f.server_port == port).unwrap()
 }
 
