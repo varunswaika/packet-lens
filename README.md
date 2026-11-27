@@ -52,7 +52,7 @@ The captures in `tests/fixtures` are made by `make.py`, so each test knows exact
 | TLS names | 2 | 2 | 100% |
 | DNS replies | 15 | 15 | 100% |
 
-tshark needs `-o tcp.reassemble_out_of_order:TRUE` for this. With its defaults it finds neither TLS name, because both ClientHellos arrive second half first. The captures are small and made for the tests; agreement on large real captures is not yet measured.
+tshark needs `-o tcp.reassemble_out_of_order:TRUE` for this. With its defaults it finds neither TLS name, because both ClientHellos arrive second half first. Flows are matched by protocol, addresses and ports only; packet and byte counts are not compared. Several captures hold the same packets in another format, so the distinct cases are fewer: 7 flows, 1 TLS name and 3 DNS replies. The captures are small and made for the tests; agreement on large real captures is not yet measured.
 
 ## Layout
 
@@ -67,6 +67,7 @@ crates/cli/           the packet-lens command
 crates/wasm/          the C ABI the page calls: alloc, analyse, free
 web/                  the page
 tests/fixtures/       captures and the script that makes them
+tests/tshark_diff.py  compares the report with tshark
 ```
 
 The wasm module has no imports and no wasm-bindgen. The page copies the file into the module's memory, and the report comes back as JSON with a length in front. It is the same boundary as in my earlier net-visual project.
