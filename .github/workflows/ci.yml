@@ -16,3 +16,14 @@ jobs:
           node-version: 24
       - run: make lint CARGO_FLAGS= RUFF="pipx run ruff"
       - run: make check CARGO_FLAGS=
+
+  # Compares the report with tshark on the test captures.
+  tshark:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - run: sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tshark
+      - run: cargo build --release -p packet-lens-cli
+      - run: tshark --version | head -1
+      - run: python3 tests/tshark_diff.py
