@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/banner.png" alt="Pixel art: a magnifying glass over packets on a wire shows their layers, beside a chart of top talkers" width="100%"></p>
+
 # packet-lens
 
 Reads a pcap or pcapng capture and tells you what is in it: protocols, top talkers, flows, TLS server names and DNS queries. The core is plain Rust. It runs as a CLI, or compiled to WebAssembly in a web page where the file never leaves the browser tab.
