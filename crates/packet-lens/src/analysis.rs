@@ -18,7 +18,7 @@ const MAX_TALKERS: usize = 100;
 const MAX_FLOWS: usize = 1000;
 const MAX_DNS: usize = 5000;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct Report {
     pub format: &'static str,
     pub packets: u64,
