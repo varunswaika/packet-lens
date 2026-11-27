@@ -4,7 +4,7 @@
 
 Reads a pcap or pcapng capture and tells you what is in it: protocols, top talkers, flows, TLS server names and DNS queries. The core is plain Rust. It runs as a CLI, or compiled to WebAssembly in a web page where the file never leaves the browser tab.
 
-**Live demo:** https://varunagarwalofficial.github.io/packet-lens/ (the capture stays in your browser).
+**Live demo:** https://varunswaika.github.io/packet-lens/ (the capture stays in your browser).
 
 ![The web page showing the sample capture](docs/screenshot.png)
 
