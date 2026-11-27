@@ -4,7 +4,8 @@
 
 - 43 Rust tests and 3 node tests pass. rustfmt, clippy, Biome and ruff are clean.
 - The page was checked by hand in Chromium, light and dark, with the sample capture.
-- Not yet tried on large real-world captures. CI is written but has not run.
+- CI runs lint and tests on every push; it first ran green on 27 November 2026.
+- Not yet tried on large real-world captures.
 
 Next:
 
