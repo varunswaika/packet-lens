@@ -169,8 +169,8 @@ pub struct Analyser {
     dns: Vec<DnsEntry>,
     dns_count: usize,
     /// Queries waiting for a response: (client, client port, id) to their
-    /// place in the log.
-    pending: HashMap<(IpAddr, u16, u16), usize>,
+    /// place in the log, or `None` for a query counted after the log was full.
+    pending: HashMap<(IpAddr, u16, u16), Option<usize>>,
 }
 
 const LAYERS: [&str; 4] = ["link", "network", "transport", "application"];
@@ -344,26 +344,31 @@ impl Analyser {
         };
         let answers: Vec<String> = message.answers.iter().map(dns::Answer::describe).collect();
         if message.response {
-            let waiting = self.pending.remove(&(dst.0, dst.1, message.id));
-            if let Some(entry) = waiting.and_then(|i| self.dns.get_mut(i)) {
-                entry.rcode = Some(dns::rcode_name(message.rcode));
-                entry.answers = answers;
-                entry.latency_us = Some(time.saturating_sub(entry.time_us * 1000) / 1000);
-                return true;
+            match self.pending.remove(&(dst.0, dst.1, message.id)) {
+                Some(Some(i)) => {
+                    let entry = &mut self.dns[i];
+                    entry.rcode = Some(dns::rcode_name(message.rcode));
+                    entry.answers = answers;
+                    entry.latency_us = Some(time.saturating_sub(entry.time_us * 1000) / 1000);
+                    return true;
+                }
+                Some(None) => return true,
+                None => {}
             }
         }
         self.dns_count += 1;
-        if self.dns.len() == MAX_DNS {
-            return true;
-        }
         let (client, server) = if message.response {
             (dst, src)
         } else {
             (src, dst)
         };
+        let full = self.dns.len() == MAX_DNS;
         if !message.response {
-            self.pending
-                .insert((client.0, client.1, message.id), self.dns.len());
+            let place = (!full).then_some(self.dns.len());
+            self.pending.insert((client.0, client.1, message.id), place);
+        }
+        if full {
+            return true;
         }
         self.dns.push(DnsEntry {
             time_us: time / 1000,
