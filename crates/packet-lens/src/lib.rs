@@ -2,3 +2,4 @@
 
 mod bytes;
 pub mod capture;
+pub mod decode;
