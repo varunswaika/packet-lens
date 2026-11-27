@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'"
+    />
+    <title>packet-lens</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <main>
+      <h1>packet-lens</h1>
+      <p class="lede">
+        Drop a pcap or pcapng file to see its protocols, top talkers, flows, TLS server names and DNS queries.
+        The file is read in this tab and never leaves it.
+      </p>
+      <div class="drop">
+        <label class="button">Choose a capture <input id="file" type="file" accept=".pcap,.pcapng,.cap" /></label>
+        <button id="sample" type="button" class="link">or try a sample</button>
+      </div>
+      <div id="results"></div>
+    </main>
+  </body>
+</html>

@@ -22,3 +22,4 @@ venv/
 
 # built by make web
 web/packet_lens.wasm
+web/sample.pcap
