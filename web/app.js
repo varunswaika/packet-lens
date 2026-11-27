@@ -67,13 +67,7 @@ function protocols(r) {
     r.protocols.map((p) => {
       const first = p.layer !== layer
       layer = p.layer
-      return [
-        first ? p.layer : "",
-        p.name,
-        num(p.packets),
-        num(size(p.bytes)),
-        bar(p.packets / r.packets),
-      ]
+      return [first ? p.layer : "", p.name, num(p.packets), num(size(p.bytes)), bar(p.packets / r.packets)]
     }),
   )
 }
@@ -82,30 +76,34 @@ function talkers(r) {
   const most = r.talkers.length > 0 ? total(r.talkers[0]) : 1
   return table(
     ["Address", "Sent", "", "Received", "", ""],
-    r.talkers.slice(0, ROWS).map((t) => [
-      el("code", {}, t.addr),
-      num(pkts(t.sent.packets)),
-      num(size(t.sent.bytes)),
-      num(pkts(t.received.packets)),
-      num(size(t.received.bytes)),
-      bar(total(t) / most),
-    ]),
+    r.talkers
+      .slice(0, ROWS)
+      .map((t) => [
+        el("code", {}, t.addr),
+        num(pkts(t.sent.packets)),
+        num(size(t.sent.bytes)),
+        num(pkts(t.received.packets)),
+        num(size(t.received.bytes)),
+        bar(total(t) / most),
+      ]),
   )
 }
 
 function flows(r) {
   return table(
     ["", "Client", "Server", "Packets", "Bytes", "Time", "What", "TCP"],
-    r.flows.slice(0, ROWS).map((f) => [
-      f.protocol,
-      el("code", {}, endpoint(f.client, f.client_port, f.protocol)),
-      el("code", {}, endpoint(f.server, f.server_port, f.protocol)),
-      num(f.to_server.packets + f.to_client.packets),
-      num(size(f.to_server.bytes + f.to_client.bytes)),
-      num(seconds(f.end_us - f.start_us)),
-      what(f),
-      f.tcp && tcpNotes(f.tcp),
-    ]),
+    r.flows
+      .slice(0, ROWS)
+      .map((f) => [
+        f.protocol,
+        el("code", {}, endpoint(f.client, f.client_port, f.protocol)),
+        el("code", {}, endpoint(f.server, f.server_port, f.protocol)),
+        num(f.to_server.packets + f.to_client.packets),
+        num(size(f.to_server.bytes + f.to_client.bytes)),
+        num(seconds(f.end_us - f.start_us)),
+        what(f),
+        f.tcp && tcpNotes(f.tcp),
+      ]),
   )
 }
 
@@ -132,15 +130,17 @@ function tcpNotes(tcp) {
 function dns(r, start) {
   return table(
     ["Time", "Client", "Type", "Name", "Result", "Answers", "Took"],
-    r.dns.slice(0, ROWS).map((d) => [
-      num(seconds(d.time_us - start)),
-      el("code", {}, d.client),
-      d.kind,
-      el("code", {}, d.name),
-      el("span", { class: d.rcode === "NOERROR" ? "" : "warn" }, d.rcode ?? "no reply"),
-      d.answers.join(", "),
-      num(d.latency_us != null ? `${(d.latency_us / 1000).toFixed(1)} ms` : ""),
-    ]),
+    r.dns
+      .slice(0, ROWS)
+      .map((d) => [
+        num(seconds(d.time_us - start)),
+        el("code", {}, d.client),
+        d.kind,
+        el("code", {}, d.name),
+        el("span", { class: d.rcode === "NOERROR" ? "" : "warn" }, d.rcode ?? "no reply"),
+        d.answers.join(", "),
+        num(d.latency_us != null ? `${(d.latency_us / 1000).toFixed(1)} ms` : ""),
+      ]),
   )
 }
 
@@ -153,11 +153,25 @@ function table(headings, rows) {
     el(
       "table",
       {},
-      el("thead", {}, el("tr", {}, headings.map((h, i) => el("th", numeric(i) ? { class: "num" } : {}, h)))),
+      el(
+        "thead",
+        {},
+        el(
+          "tr",
+          {},
+          headings.map((h, i) => el("th", numeric(i) ? { class: "num" } : {}, h)),
+        ),
+      ),
       el(
         "tbody",
         {},
-        rows.map((cells) => el("tr", {}, cells.map((c) => (c instanceof Node && c.tagName === "TD" ? c : el("td", {}, c))))),
+        rows.map((cells) =>
+          el(
+            "tr",
+            {},
+            cells.map((c) => (c instanceof Node && c.tagName === "TD" ? c : el("td", {}, c))),
+          ),
+        ),
       ),
     ),
   )

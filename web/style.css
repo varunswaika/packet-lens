@@ -29,7 +29,11 @@ body {
   margin: 0;
   background: var(--page);
   color: var(--ink);
-  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  font:
+    15px / 1.5 system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
 }
 
 main {
@@ -175,5 +179,10 @@ td.bar {
 }
 
 code {
-  font: 13px ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font:
+    13px ui-monospace,
+    "SF Mono",
+    Menlo,
+    Consolas,
+    monospace;
 }

@@ -1,0 +1,5 @@
+{
+  "files": { "includes": ["web/**/*.js", "web/**/*.css", "tests/**/*.mjs"] },
+  "formatter": { "indentStyle": "space", "lineWidth": 120 },
+  "javascript": { "formatter": { "semicolons": "asNeeded" } }
+}

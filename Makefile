@@ -11,6 +11,7 @@ check: web
 lint:
 	cargo fmt --all --check
 	cargo clippy $(CARGO_FLAGS) --all-targets -- -D warnings
+	npx -y @biomejs/biome@2 check
 
 # Builds the WebAssembly module into web/ with a sample capture beside it.
 web:
