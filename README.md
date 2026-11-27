@@ -42,6 +42,18 @@ make fixtures # rewrite the captures in tests/fixtures (needs uv; uses scapy)
 
 The captures in `tests/fixtures` are made by `make.py`, so each test knows exactly what is in them: a DNS exchange over IPv4 and IPv6, an NXDOMAIN, an HTTP flow with a resent segment, ICMP, ARP and a VLAN-tagged packet, written as pcap in both byte orders, nanosecond pcap and pcapng. All four must give the same report. `tls.pcap` holds a real OpenSSL ClientHello split in two, sent second half first, with sequence numbers that wrap mid-hello. Its random parts change each time the script runs; the tests do not look at them.
 
+### Against tshark
+
+`tests/tshark_diff.py` runs packet-lens and tshark on every test capture and compares TCP and UDP flows, TLS server names, and DNS replies (id, name, result code, A, AAAA and CNAME answers). CI runs it on each push. On 27 November 2026, with tshark 4.2.2 and the 10 captures:
+
+| Compared | Both | Either | Agreement |
+|---|---|---|---|
+| flows | 31 | 31 | 100% |
+| TLS names | 2 | 2 | 100% |
+| DNS replies | 15 | 15 | 100% |
+
+tshark needs `-o tcp.reassemble_out_of_order:TRUE` for this. With its defaults it finds neither TLS name, because both ClientHellos arrive second half first. The captures are small and made for the tests; agreement on large real captures is not yet measured.
+
 ## Layout
 
 ```

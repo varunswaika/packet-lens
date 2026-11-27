@@ -5,7 +5,7 @@ For each capture it compares three things:
 - flows: TCP and UDP conversations, as a protocol and an unordered pair of
   address and port;
 - TLS server names: the name each conversation's ClientHello asks for;
-- DNS answers: each reply's query id, name, result code and its A, AAAA and
+- DNS replies: each reply's query id, name, result code and its A, AAAA and
   CNAME answers.
 
 Agreement is the share of items both tools report, out of all items either
@@ -112,7 +112,7 @@ def main():
     captures = [pathlib.Path(a) for a in args[1:]] or sorted(
         (ROOT / "tests/fixtures").glob("*.pcap*")
     )
-    kinds = ("flows", "TLS names", "DNS answers")
+    kinds = ("flows", "TLS names", "DNS replies")
     both = dict.fromkeys(kinds, 0)
     either = dict.fromkeys(kinds, 0)
     differences = []
