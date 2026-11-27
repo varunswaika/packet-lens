@@ -61,7 +61,7 @@ The wasm module has no imports and no wasm-bindgen. The page copies the file int
 
 ## Status
 
-27 November 2026. Works on the fixtures, from the CLI and in the page. Not yet tried on large real-world captures. CI is written but has not run.
+27 November 2026. Works on the fixtures, from the CLI and in the page. CI runs `make check` and `make lint` on every push and passes. Not yet tried on large real-world captures. See [STATUS.md](STATUS.md).
 
 ## Licence
 
