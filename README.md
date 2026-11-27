@@ -34,7 +34,7 @@ The page is static: `index.html`, a little JavaScript and the 200 kB wasm module
 
 ```sh
 make check    # Rust tests, then the wasm module through the page's loader in node
-make lint     # rustfmt and clippy
+make lint     # rustfmt, clippy, and Biome for the JavaScript and CSS
 make fixtures # rewrite the captures in tests/fixtures (needs uv; uses scapy)
 ```
 
