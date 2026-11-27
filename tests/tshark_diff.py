@@ -10,7 +10,9 @@ For each capture it compares three things:
 
 Agreement is the share of items both tools report, out of all items either
 reports. It prints a Markdown table, and exits with status 1 if anything
-differs.
+differs. tshark runs with out-of-order TCP reassembly on, which is off by
+default; without it, tshark misses the TLS name in the two captures whose
+ClientHello arrives out of order.
 
 Usage: python3 tests/tshark_diff.py [packet-lens binary] [capture...]
 """
@@ -33,6 +35,8 @@ RCODES = {
 
 def tshark(capture, display_filter, fields):
     command = ["tshark", "-n", "-r", str(capture), "-Y", display_filter, "-T", "fields"]
+    # tshark leaves segments that arrive early out of its reassembly by default.
+    command += ["-o", "tcp.reassemble_out_of_order:TRUE"]
     command += ["-E", "separator=\t", "-E", "occurrence=a", "-E", "aggregator=,"]
     for field in fields:
         command += ["-e", field]
