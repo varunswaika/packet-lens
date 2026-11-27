@@ -171,9 +171,14 @@ def main():
         for p in packets:
             w.write(p)
 
-    packets, hello_len, half = tls()
-    write_pcap("tls.pcap", packets)
+    hello, hello_len, half = tls()
+    write_pcap("tls.pcap", hello)
     print(f"tls.pcap: ClientHello {hello_len} bytes, first half {half}")
+
+    # Both together, for trying the web page.
+    for p in hello:
+        p.time += Decimal("1.5")
+    write_pcap("sample.pcap", packets + hello)
 
     write_pcap("sll.pcap", one_query(CookedLinux(proto=0x0800), "sll.test"))
     write_pcap("sll2.pcap", one_query(CookedLinuxV2(proto=0x0800), "sll2.test"))
