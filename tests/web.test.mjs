@@ -27,4 +27,5 @@ test("times survive the trip through JSON", () => {
 
 test("errors come back as exceptions", () => {
   assert.throws(() => analyse(new TextEncoder().encode("hello")), /not a pcap or pcapng file/)
+  assert.throws(() => analyse(new Uint8Array(0)), /not a pcap or pcapng file/)
 })
