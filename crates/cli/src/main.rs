@@ -5,6 +5,17 @@ use clap::Parser;
 use packet_lens::Report;
 use packet_lens::analysis::{FlowSummary, Traffic};
 
+// Like std's println!, but a closed pipe (`packet-lens x.pcap | head`) ends the program quietly
+// instead of panicking.
+macro_rules! println {
+    ($($t:tt)*) => {{
+        use std::io::Write as _;
+        if writeln!(std::io::stdout().lock(), $($t)*).is_err() {
+            std::process::exit(0);
+        }
+    }};
+}
+
 /// Sums up a pcap or pcapng capture: protocols, top talkers, flows with
 /// TCP reassembly stats and TLS server names, and DNS queries.
 #[derive(Parser)]

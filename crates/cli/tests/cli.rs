@@ -1,4 +1,4 @@
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 fn run(args: &[&str]) -> (bool, String, String) {
     let out = Command::new(env!("CARGO_BIN_EXE_packet-lens"))
@@ -32,4 +32,20 @@ fn not_a_capture() {
     let (ok, _, err) = run(&["make.py"]);
     assert!(!ok);
     assert!(err.contains("not a pcap or pcapng file"));
+}
+
+#[test]
+fn closed_pipe() {
+    // The reader goes away before the first line is written, as with `| head -0`.
+    let mut child = Command::new(env!("CARGO_BIN_EXE_packet-lens"))
+        .args(["--json", "mixed.pcapng"])
+        .current_dir(concat!(env!("CARGO_MANIFEST_DIR"), "/../../tests/fixtures"))
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    drop(child.stdout.take());
+    let out = child.wait_with_output().unwrap();
+    let err = String::from_utf8(out.stderr).unwrap();
+    assert!(!err.contains("panicked"), "{err}");
 }
