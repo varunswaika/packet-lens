@@ -3,10 +3,12 @@ name: Release
 # Push a tag v<version> to release: check, build binaries for Linux, macOS and
 # Windows, attach them to a GitHub release with provenance, then publish the
 # crates to crates.io by trusted publishing (no token). A version already on
-# crates.io is skipped, so a rerun is safe.
+# crates.io is skipped, so a rerun is safe. Run by hand, it only checks and
+# builds the binaries.
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -23,6 +25,7 @@ jobs:
         with:
           node-version: 24
       - name: The tag matches the version in Cargo.toml
+        if: github.ref_type == 'tag'
         run: |
           version=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
           test "$GITHUB_REF_NAME" = "v$version" || { echo "tag $GITHUB_REF_NAME, Cargo.toml $version"; exit 1; }
@@ -64,6 +67,7 @@ jobs:
 
   release:
     needs: binaries
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -91,6 +95,7 @@ jobs:
 
   publish:
     needs: release
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
