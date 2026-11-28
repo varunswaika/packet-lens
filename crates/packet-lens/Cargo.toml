@@ -4,7 +4,12 @@ description = "Reads pcap and pcapng captures and sums up what is in them"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-publish.workspace = true
+publish = true
+repository.workspace = true
+homepage.workspace = true
+readme = "../../README.md"
+keywords = ["pcap", "pcapng", "network", "tls", "dns"]
+categories = ["network-programming", "parser-implementations"]
 
 [dependencies]
 serde.workspace = true

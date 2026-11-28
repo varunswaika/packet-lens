@@ -4,7 +4,12 @@ description = "Prints a summary of a pcap or pcapng capture"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-publish.workspace = true
+publish = true
+repository.workspace = true
+homepage.workspace = true
+readme = "../../README.md"
+keywords = ["pcap", "pcapng", "network", "cli", "security"]
+categories = ["command-line-utilities", "network-programming"]
 
 [[bin]]
 name = "packet-lens"
@@ -15,3 +20,11 @@ packet-lens.workspace = true
 serde_json.workspace = true
 clap.workspace = true
 anyhow = "1"
+
+[package.metadata.binstall]
+pkg-url = "{ repo }/releases/download/v{ version }/packet-lens-{ target }{ archive-suffix }"
+bin-dir = "{ bin }{ binary-ext }"
+pkg-fmt = "tgz"
+
+[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
+pkg-fmt = "zip"

@@ -29,4 +29,13 @@ serve: web
 fixtures:
 	uv run --no-project --with scapy tests/fixtures/make.py
 
-.PHONY: build check lint web serve fixtures
+# Times startup and throughput with hyperfine. The big capture repeats the
+# test captures with new ports, so each copy is new flows.
+BIN := target/release/packet-lens
+bench: build
+	python3 bench/big.py tests/fixtures/mixed.pcap target/bench.pcap 100
+	hyperfine -N --warmup 20 --export-markdown target/bench-start.md "$(BIN) --version" "$(BIN) tests/fixtures/sample.pcap"
+	hyperfine -N --warmup 2 --export-markdown target/bench-big.md "$(BIN) target/bench.pcap"
+	cat target/bench-start.md target/bench-big.md > target/bench.md
+
+.PHONY: build check lint web serve fixtures bench

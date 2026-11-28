@@ -1,0 +1,19 @@
+name: Bench
+
+# Times packet-lens with hyperfine on a GitHub runner. Run it by hand; the
+# numbers go in the job summary, and from there into the README.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bench:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends hyperfine
+      - run: make bench CARGO_FLAGS=
+      - run: cat target/bench.md >> "$GITHUB_STEP_SUMMARY"
